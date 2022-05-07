@@ -20,6 +20,7 @@ class AliyunIoTSDK
 {
 private:
   // mqtt 链接信息，动态生成的
+  static char briefId[100];
   static char mqttPwd[256];
   static char clientId[256];
   static char mqttUsername[100];

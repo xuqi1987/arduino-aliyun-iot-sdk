@@ -33,6 +33,7 @@ static int retry_count = 0;
 
 static PubSubClient *client = NULL;
 
+char AliyunIoTSDK::briefId[100] = "";
 char AliyunIoTSDK::clientId[256] = "";
 char AliyunIoTSDK::mqttUsername[100] = "";
 char AliyunIoTSDK::mqttPwd[256] = "";
@@ -58,8 +59,8 @@ static String hmac256(const String &signcontent, const String &ds)
     String sign = "";
     for (byte i = 0; i < SHA256HMAC_SIZE; ++i)
     {
-        sign += "0123456789ABCDEF"[hashCode[i] >> 4];
-        sign += "0123456789ABCDEF"[hashCode[i] & 0xf];
+        sign += "0123456789abcdef"[hashCode[i] >> 4];
+        sign += "0123456789abcdef"[hashCode[i] & 0xf];
     }
 
     return sign;
@@ -173,10 +174,11 @@ void AliyunIoTSDK::begin(Client &espClient,
     long times = millis();
     String timestamp = String(times);
 
-    sprintf(clientId, "%s|securemode=3,signmethod=hmacsha256,timestamp=%s|", deviceName, timestamp.c_str());
+    sprintf(briefId, "%s.%s", productKey, deviceName);
+    sprintf(clientId, "%s|securemode=2,signmethod=hmacsha256,timestamp=%s|",briefId, timestamp.c_str());
 
     String signcontent = "clientId";
-    signcontent += deviceName;
+    signcontent += briefId;
     signcontent += "deviceName";
     signcontent += deviceName;
     signcontent += "productKey";
